@@ -1,0 +1,64 @@
+version: '3.6'
+
+networks:
+
+    micros:
+        name: micros
+        driver: overlay
+
+    db:
+        name: db
+        driver: overlay
+
+services:
+
+    # api:
+    #     build:
+    #         context: ./services/api
+    #         args:
+    #             NODE_ENV: development
+    #     image: epharma_api:dev
+    #     ports:
+    #         - 3000:3000
+    #     command: npm run dev
+    #     environment:
+    #         NODE_ENV: development
+    #         API_PORT: 3000
+    #     volumes:
+    #         - ./services/api:/app
+    #     networks:
+    #         - micros
+
+    master:
+        build:
+            context: ./services/master
+            args:
+                NODE_ENV: development
+        image: epharma_master:dev
+        command: npm run dev
+        environment:
+            NODE_ENV: development
+            API_PORT: 3000
+        volumes: 
+            - ./services/master:/app
+        networks:
+            - micros
+            - db
+
+    mongodb:
+        image: mvertes/alpine-mongo
+        ports:
+            - 27017:27017
+        volumes:
+            - ./data/mongodb:/data/db
+        networks:
+            - db
+
+    meili:
+        image: getmeili/meilisearch
+        ports:
+            - 7700:7700
+        volumes:
+            - ./data/meili:/data.ms
+        networks:
+            - db
