@@ -39,6 +39,11 @@ services:
         environment:
             NODE_ENV: development
             API_PORT: 3000
+            MONGODB_PROTOCOL: mongodb
+            MONGODB_HOST: mongodb:27017
+            MONGODB_DB: meili
+            MEILI_HOST: http://meili:7700
+            MEILI_API_KEY: 
         volumes: 
             - ./services/master:/app
         networks:
